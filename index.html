@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Timer</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            text-align: center;
+            background-color:#222;
+        }
+        h1{
+            color: #0000ff;
+        }
+        .container{
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .box{
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            margin-top: 50px;
+            font-size: 2rem;
+        }
+        .timer{
+            font-size: 4rem;
+            margin-top: 50px;
+            font-weight: 900;
+        }
+        .boxer{
+            border: 1px solid #000000;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 900;
+            background-color: #3fea3f;
+            cursor: pointer;
+        }
+        .boxer:hover{
+            background-color: #33e633;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <h1>Timer Watch</h1>
+        <div class="timer" id="timer">00.00.00.000</div>
+        <div class="box">
+            <div id="startTimer" class="boxer">Start</div>
+            <div id="stopTimer" class="boxer">Stop</div>
+            <div id="resetTimer" class="boxer">Reset</div>
+        </div>
+    </div>
+
+    <script>
+
+        let timeInterval;
+        let startTime;
+        let timerIsRunnig = false;
+        let remainTime = 0;
+
+        let timer = document.getElementById('timer');
+        let startTimer = document.getElementById('startTimer');
+        let stopTimer = document.getElementById('stopTimer');
+        let resetTimer = document.getElementById('resetTimer');
+
+        startTimer.addEventListener('click',startTimerr);
+        stopTimer.addEventListener('click',stopTimerr);
+        resetTimer.addEventListener('click', resetTimerr);
+
+        
+
+        function formatTime(time){
+            let val = (60 * 60 * 1000);
+
+            let hours = Math.floor(time / (val)).toString().padStart(2,'0');
+
+            let minutes = Math.floor((time % (val)) / (60 * 1000)).toString().padStart(2,'0');
+
+            let seconds = Math.floor((time % (60 * 1000)) / 1000).toString().padStart(2,'0');
+
+            let miliSeconds = (time % 100).toString().padStart(3,'0');
+
+            return `${hours}:${minutes}:${seconds}:${miliSeconds}`;
+        }
+
+        function updateTimer(){
+            const currentTime = new Date().getTime();
+            remainTime = currentTime - startTime;
+            timer.textContent = formatTime(remainTime);
+        }
+
+        function startTimerr(){
+            if(!timerIsRunnig){
+            startTime = new Date().getTime() - remainTime;
+            timeInterval = setInterval(updateTimer,100);
+            timerIsRunnig = true; 
+            }
+        }
+        function stopTimerr(){
+            clearInterval(timeInterval);
+            timerIsRunnig = false;
+        }
+
+        function resetTimerr(){
+            stopTimerr();
+            remainTime = 0;
+            timer.textContent = formatTime(remainTime);
+        }
+
+    </script>
+</body>
+</html>
